@@ -54,7 +54,7 @@ export class Transport {
   private readonly _cookies: CookieState;
   private readonly _logger: Logger | undefined;
   private readonly _userAgent: string;
-  private readonly _fetch: typeof fetch;
+  private readonly _fetchImpl: typeof fetch | undefined;
   private _lastRateLimit: RateLimit | null = null;
 
   constructor(options: TransportOptions) {
@@ -69,7 +69,7 @@ export class Transport {
     this._cookies = options.cookies ?? new CookieState();
     this._logger = options.logger;
     this._userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
-    this._fetch = options.fetchImpl ?? globalThis.fetch.bind(globalThis);
+    this._fetchImpl = options.fetchImpl;
   }
 
   get cookies(): CookieState {
@@ -109,9 +109,11 @@ export class Transport {
       const timer = setTimeout(() => controller.abort(), this._timeout);
       const t0 = Date.now();
 
+      const fetchFn = this._fetchImpl ?? globalThis.fetch.bind(globalThis);
+
       let response: Response;
       try {
-        response = await this._fetch(url, {
+        response = await fetchFn(url, {
           method: method.toUpperCase(),
           headers,
           body: hasBody ? JSON.stringify(options.json) : undefined,
