@@ -11,6 +11,11 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Normalize line endings on checkout
+        shell: bash
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -21,4 +26,18 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
       - run: npm test
-      - run: npm publish --provenance --access public
+      - name: Skip if version already published
+        id: check
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          NAME=$(node -p "require('./package.json').name")
+          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
+            echo "Version $VERSION of $NAME is already on npm. Skipping publish."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish
+        if: steps.check.outputs.skip != 'true'
+        run: npm publish --provenance --access public
