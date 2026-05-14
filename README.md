@@ -16,17 +16,17 @@ a JSON HTTP API that exposes 𝕏 (Twitter) data and actions.
 ## Install
 
 ```bash
-npm install twtapi
+npm install @twtapi-io/twtapi
 # or
-pnpm add twtapi
+pnpm add @twtapi-io/twtapi
 # or
-bun add twtapi
+bun add @twtapi-io/twtapi
 ```
 
 ## Quickstart
 
 ```ts
-import { TwtAPI } from "twtapi";
+import { TwtAPI } from "@twtapi-io/twtapi";
 
 const client = new TwtAPI({ apiKey: process.env.TWTAPI_KEY! });
 
@@ -103,7 +103,7 @@ for await (const member of client.communities.membersIter("1493446837214187523")
 Every HTTP error surfaces as a typed subclass of `TwtAPIError`:
 
 ```ts
-import { TwtAPI, RateLimitError, DuplicateTweetError } from "twtapi";
+import { TwtAPI, RateLimitError, DuplicateTweetError } from "@twtapi-io/twtapi";
 
 try {
   await client.tweets.create("hi");
