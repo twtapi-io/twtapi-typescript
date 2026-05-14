@@ -1,5 +1,5 @@
 {
-  "name": "twtapi",
+  "name": "@twtapi-io/twtapi",
   "version": "0.1.0",
   "description": "Official TypeScript / Node.js client for the twtapi.io HTTP API.",
   "type": "module",
