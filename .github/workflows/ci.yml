@@ -16,6 +16,11 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         node: [18, 20, 22]
     steps:
+      - name: Normalize line endings on checkout
+        shell: bash
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -35,6 +40,11 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
+      - name: Normalize line endings on checkout
+        shell: bash
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install
